@@ -32,14 +32,16 @@ export function getProperties ( model ) {
 
 export function getMemberFunctions ( model ) {
 
+  let prototype = Object.getPrototypeOf( model );
+
   // Get the property names on the prototype
-  let functions = Object.getOwnPropertyNames( Object.getPrototypeOf( model ) );
+  let functions = Object.getOwnPropertyNames( prototype );
 
   // Start a list of methods to return
   let methods = {};
 
   // Loop through method name strings
-  for ( let [ methodName, method ] of findFunctions( functions, model ) ) {
+  for ( let [ methodName, method ] of findFunctions( functions, prototype ) ) {
     methods[ methodName ] = method;
   }
 
@@ -49,14 +51,16 @@ export function getMemberFunctions ( model ) {
 
 export function getFunctionsOfType ( model, type = 'get' ) {
 
+  let prototype = Object.getPrototypeOf( model );
+
   // Get the property names on the prototype
-  let functions = Object.getOwnPropertyNames( Object.getPrototypeOf( model ) );
+  let functions = Object.getOwnPropertyNames( prototype );
 
   // Start a list of getters to return
   let foundFunctions = {};
 
   // Loop through method name strings
-  for ( let [ methodName, method ] of findFunctions( functions, model, type ) ) {
+  for ( let [ methodName, method ] of findFunctions( functions, prototype, type ) ) {
 
     if ( isField( methodName, model ) ) {
 
@@ -66,7 +70,7 @@ export function getFunctionsOfType ( model, type = 'get' ) {
 
     }
 
-    foundFunctions.methodName = method;
+    foundFunctions[ methodName ] = method;
   }
 
   // Return the getters.
@@ -107,20 +111,23 @@ function* findFunctions ( names, object, flag = 'methods' ) {
 
   let filters = ignore.methods;
   let filterFunc = method => {
-    return ( typeof method !== 'function' || typeof method.get === 'function' || typeof method.set === 'function' );
+    return ( typeof method.value !== 'function' || typeof method.get === 'function' || typeof method.set === 'function' );
   };
-  let returnValue = name => object[ name ];
+  let returnValue = method => method.value;
+  let checkWritable = method => !method.writable;
 
   switch ( flag ) {
     case 'get':
       filterFunc = method => typeof method.get !== 'function';
-      returnValue = name => object[ name ];
+      returnValue = method => method.get;
+      checkWritable = method => false;
       break;
     case 'set':
       filterFunc = method => typeof method.set !== 'function';
+      returnValue = method => method.set;
       break;
     case 'static':
-      filterFunc = method => typeof method !== 'function';
+      filterFunc = method => typeof method.value !== 'function';
       filters = ignore.statics;
       break;
     default:
@@ -131,11 +138,11 @@ function* findFunctions ( names, object, flag = 'methods' ) {
 
     let method = Object.getOwnPropertyDescriptor( object, name );
 
-    if ( filters.indexOf( name ) >= 0 || filterFunc( method ) || !method.writable ) {
+    if ( filters.indexOf( name ) >= 0 || filterFunc( method ) || checkWritable( method ) ) {
       continue;
     }
 
-    yield [ name, returnValue( name ) ];
+    yield [ name, returnValue( method ) ];
   }
 
 }
