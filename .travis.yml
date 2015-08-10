@@ -4,6 +4,7 @@ node_js:
 before_script:
   - npm install gulpjs/gulp-cli#4.0 -g
   - npm install eslint -g
+  - npm install babel -g
   - gulp build
 script:
   - gulp build
