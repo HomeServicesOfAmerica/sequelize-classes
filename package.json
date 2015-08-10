@@ -17,12 +17,12 @@
   "author": "Brad Decker <bhdecker84@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "babel": "^5.8.21",
     "lodash": "^3.10.1",
     "sequelize": "^3.5.1"
   },
   "devDependencies": {
     "babel": "^5.8.21",
+    "babel-eslint": "^4.0.5",
     "gulp": "git://github.com/gulpjs/gulp.git#4.0",
     "gulp-eslint": "^1.0.0",
     "mocha": "^2.2.5",
