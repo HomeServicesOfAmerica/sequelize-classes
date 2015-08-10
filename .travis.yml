@@ -8,6 +8,7 @@ before_script:
   - npm install eslint -g
   - npm install babel -g
   - npm install babel-eslint -g
+  - npm install mocha -g
 
 script:
   - gulp build
