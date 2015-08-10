@@ -11,3 +11,4 @@ before_script:
 
 script:
   - gulp build
+  - npm test
