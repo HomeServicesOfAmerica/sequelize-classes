@@ -62,11 +62,11 @@ export default class Model {
 
     for ( let [ field, definition ] of entries( this._fields ) ) {
       if ( typeof definition === 'object' ) {
-        definition.type = dataTypes[definition.type];
+        definition.type = dataTypes[ definition.type ];
       } else {
-        definition = dataTypes[definition];
+        definition = dataTypes[ definition ];
       }
-      this._fields[field] = definition;
+      this._fields[ field ] = definition;
     }
   }
 

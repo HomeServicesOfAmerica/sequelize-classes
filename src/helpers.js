@@ -15,7 +15,7 @@ const ignore = {
 
 export function* entries ( obj ) {
   for ( let key of Object.keys( obj ) ) {
-    yield [ key, obj[key]];
+    yield [ key, obj[ key ]];
   }
 }
 
@@ -24,7 +24,7 @@ export function getProperties ( model ) {
   let properties = {};
 
   for ( let name of propertyNames ) {
-    properties[name] = model[name];
+    properties[ name ] = model[ name ];
   }
 
   return properties;
@@ -40,7 +40,7 @@ export function getMemberFunctions ( model ) {
 
   // Loop through method name strings
   for ( let [ methodName, method ] of findFunctions( functions, model ) ) {
-    methods[methodName] = method;
+    methods[ methodName ] = method;
   }
 
   // Return the methods.
@@ -61,7 +61,7 @@ export function getFunctionsOfType ( model, type = 'get' ) {
     if ( isField( methodName, model ) ) {
 
       let field = fieldName( methodName );
-      model._fields[field] = addToDefinition( model._fields[field], method, type );
+      model._fields[ field ] = addToDefinition( model._fields[ field ], method, type );
       continue;
 
     }
@@ -86,7 +86,7 @@ export function getStaticFunctions ( model ) {
 
   // Loop through method name strings
   for ( let [ methodName, method ] of findFunctions( functions, constructor, 'static' ) ) {
-    statics[methodName] = method;
+    statics[ methodName ] = method;
   }
 
   // Return the statics.
@@ -99,7 +99,7 @@ function addToDefinition ( field, method, type = 'get' ) {
   if ( typeof field !== 'object' ) {
     field = { type: field };
   }
-  field[type] = method;
+  field[ type ] = method;
   return true;
 }
 
@@ -107,14 +107,14 @@ function* findFunctions ( names, object, flag = 'methods' ) {
 
   let filters = ignore.methods;
   let filterFunc = method => {
-    return ( typeof method !== 'function' || typeof method.get === 'function' || typeof method.set === 'function');
+    return ( typeof method !== 'function' || typeof method.get === 'function' || typeof method.set === 'function' );
   };
-  let returnValue = name => object[name];
+  let returnValue = name => object[ name ];
 
-  switch( flag ) {
+  switch ( flag ) {
     case 'get':
       filterFunc = method => typeof method.get !== 'function';
-      returnValue = name => object[name];
+      returnValue = name => object[ name ];
       break;
     case 'set':
       filterFunc = method => typeof method.set !== 'function';
@@ -145,5 +145,5 @@ function fieldName ( name ) {
 }
 
 function isField ( name, object ) {
-  return name.startsWith( '_' ) && object._fields[fieldName( name )];
+  return name.startsWith( '_' ) && object._fields[ fieldName( name ) ];
 }

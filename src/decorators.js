@@ -17,5 +17,5 @@ export function readOnly ( ) {
 export function validate ( ) {
   return ( target, key, descriptor ) => {
 
-  }
+  };
 }
