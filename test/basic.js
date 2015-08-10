@@ -1,6 +1,5 @@
 import should from 'should';
 import Model from './../src/model.js';
-import mongoose from 'mongoose';
 
 let instance;
 
