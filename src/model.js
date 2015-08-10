@@ -1,10 +1,11 @@
-import { readOnly, enumerable } from './decorators';
-import { getMemberFunctions, getStaticFunctions, getProperties, entries, getFunctionsOfType } from './helpers';
-
 /**
  * @file
  * @author Brad Decker <brad.decker@conciergeauctions.com>
  */
+
+import { readOnly, enumerable } from './decorators';
+import { getMemberFunctions, getStaticFunctions, getProperties, entries, getFunctionsOfType } from './helpers';
+
 import Sequelize from 'sequelize';
 import _ from 'lodash';
 
