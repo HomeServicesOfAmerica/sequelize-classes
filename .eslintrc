@@ -1,0 +1,54 @@
+{
+  "parser": "babel-eslint",
+  "env": {
+    "browser": true,
+    "amd": true,
+    "jquery": true,
+    "node": true,
+    "mocha": true
+  },
+  "ecmaFeatures": {
+    "blockBindings": true,
+    "forOf": true,
+    "jsx": true,
+    "arrowFunctions": true,
+    "templateStrings": true,
+    "defaultParams": true,
+    "generators": true,
+    "objectLiteralShorthandMethods": true,
+    "modules": true,
+    "destructuring": true,
+    "classes": true,
+    "restParams": true,
+    "spread": true
+  },
+  "rules": {
+    "semi": 2,
+    "no-trailing-spaces": false,
+    "no-console": false,
+    "no-underscore-dangle": false,
+    "camelcase": false,
+    "quotes": [2, "single", "avoid-escape"],
+    "space-before-function-paren": [2, "always"],
+    "space-after-keywords": [2, "always"],
+    "space-in-brackets": [2, "always", {
+      "singleValue": false,
+      "objectsInArrays": false,
+      "arraysInArrays": false,
+      "arraysInObjects": false,
+      "objectsInObjects": false,
+      "propertyName": false
+    }],
+    "space-in-parens": [2, "always"],
+    "spaced-line-comment": [2, "always"],
+    "eqeqeq": [2, "smart"],
+    "no-else-return": 2,
+    "yoda": [2, "never", { "exceptRange": true }]
+  },
+  "globals": {
+    "angular": true
+  },
+  "plugins": [
+    "eslint-plugin-decorator"
+  ]
+}
