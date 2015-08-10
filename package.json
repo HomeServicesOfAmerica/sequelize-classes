@@ -20,5 +20,9 @@
     "babel": "^5.8.21",
     "lodash": "^3.10.1",
     "sequelize": "^3.5.1"
+  },
+  "devDependencies": {
+    "gulp": "git://github.com/gulpjs/gulp.git#4.0",
+    "gulp-eslint": "^1.0.0"
   }
 }
