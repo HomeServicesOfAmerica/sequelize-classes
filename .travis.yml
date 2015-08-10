@@ -1,11 +1,13 @@
 language: node_js
+
 node_js:
   - "0.12"
+
 before_script:
   - npm install gulpjs/gulp-cli#4.0 -g
   - npm install eslint -g
   - npm install babel -g
   - npm install babel-eslint -g
-  - gulp build
+
 script:
   - gulp build

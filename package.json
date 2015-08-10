@@ -4,7 +4,7 @@
   "description": "Library to build Sequelize models using ES6 code",
   "main": "index.js",
   "directories": {
-    "test": "test"
+    "test": "mocha --compilers js:babel/register"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -24,6 +24,8 @@
   "devDependencies": {
     "babel": "^5.8.21",
     "gulp": "git://github.com/gulpjs/gulp.git#4.0",
-    "gulp-eslint": "^1.0.0"
+    "gulp-eslint": "^1.0.0",
+    "mocha": "^2.2.5",
+    "should": "^7.0.3"
   }
 }
