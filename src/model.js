@@ -37,6 +37,8 @@ export default class Model {
 
   @enumerable( false ) _indexes = [];
 
+  @enumerable( false ) _generated = false;
+
   constructor () {
     // Just need to get rid of the added values on the constructor and inherit them to the instance.
     this._validate = this.constructor._validate || {};
@@ -112,9 +114,12 @@ export default class Model {
    */
   @readOnly()
   generateOptions () {
-    this._fields = getProperties( this );
-    defineFunctions( this );
-    this.runExtensions();
+    if ( !this._generated ) {
+      this._fields = getProperties( this );
+      defineFunctions( this );
+      this.runExtensions();
+      this._generated = true;
+    }
   }
 
   static registerModel () {
