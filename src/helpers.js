@@ -29,7 +29,7 @@ export function getProperties ( model ) {
 export function defineFunctions ( model ) {
 
   for ( let [ target, name, method ] of findFunctions( model ) ) {
-    model[target][name] = method;
+    model[ target ][ name ] = method;
   }
 
 }
