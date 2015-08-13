@@ -4,10 +4,12 @@
  */
 
 import { readOnly, enumerable } from './decorators';
-import { getMemberFunctions, getStaticFunctions, getProperties, entries, getFunctionsOfType } from './helpers';
+import { defineFunctions, getProperties, entries } from './helpers';
 
 import Sequelize from 'sequelize';
 import _ from 'lodash';
+
+let model;
 
 /**
  * @class Model
@@ -34,27 +36,13 @@ export default class Model {
   @enumerable( false )
   _setterMethods = {};
 
-  // Object for creating validation functions
-  @enumerable( false )
-  _validate = {};
-
-  // Object for creating hooks
-  @enumerable( false )
-  _hooks = {};
-
-  // Array for creating table indexes
-  @enumerable( false )
-  _indexes = [];
-
   /**
    * Replace all occurrences of known string dataTypes with real dataTypes
    * @param dataTypes
    */
   @readOnly()
-  declareTypes ( dataTypes = null ) {
-    if ( !dataTypes ) {
-      dataTypes = Sequelize;
-    }
+  declareTypes ( dataTypes = Sequelize ) {
+
     // TODO: Collect member variables and replace string data types with true data types.
     if ( this._fields.length === 0 ) {
       this.generateOptions();
@@ -68,15 +56,27 @@ export default class Model {
       }
       this._fields[ field ] = definition;
     }
+
   }
 
   @readOnly()
+  declareHooks () {
+    if ( !model.hasOwnProperty( 'addHook' ) ) {
+      throw new Error( 'declareHooks called before model generated' );
+    }
+
+    for ( let [ name, hook ] of this._hooks ) {
+      model.addHook( hook.action, name, hook.fn );
+    }
+  }
+
+  /**
+   * Split out the functions attached to this
+   */
+  @readOnly()
   generateOptions () {
     this._fields = getProperties( this );
-    this._instanceMethods = getMemberFunctions( this );
-    this._classMethods = getStaticFunctions( this );
-    this._getterMethods = getFunctionsOfType( this, 'get' );
-    this._setterMethods = getFunctionsOfType( this, 'set' );
+    defineFunctions( this );
   }
 
   static registerModel () {
