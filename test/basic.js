@@ -1,8 +1,13 @@
 import { expect } from 'chai';
 import Model from './../src/model';
-import { validate, hook, index, beforeCreate } from './../src/decorators';
+import { validate, hook, index, beforeCreate, extend } from './../src/decorators';
 
 let instance;
+
+class simpleExtension extends Model {
+  why = 'STRING';
+  type = { test: 3 };
+}
 
 /**
  * This is a simple test class to test some of the most basic features of the module
@@ -10,6 +15,7 @@ let instance;
  * @augments mongoose.Model
  * @inheritdoc mongoose.Model
  */
+@extend( simpleExtension )
 class Simple extends Model {
   name = 'STRING';
   type = 'STRING';
@@ -70,6 +76,7 @@ describe( 'Model instances', () => {
   it( 'should collect field declarations into the _fields object', () => {
     expect( instance._fields ).to.have.property( 'name' ).that.is.a( 'object' );
     expect( instance._fields ).to.have.property( 'type' ).that.is.a( 'string' );
+    expect( instance._fields ).to.have.property( 'why' ).that.is.a( 'string' );
     expect( instance ).to.not.have.property( 'uniqueEmail' );
   } );
 
@@ -100,20 +107,20 @@ describe( 'Model instances', () => {
   } );
 
   it( 'should have a _indexes property', () => {
-    expect( instance.constructor ).to.have.property( '_indexes' );
-    expect( instance.constructor._indexes ).to.have.length( 1 );
+    expect( instance ).to.have.property( '_indexes' );
+    expect( instance._indexes ).to.have.length( 1 );
   } );
 
   it( 'should have a _validate property', () => {
-    expect( instance.constructor ).to.have.property( '_validate' ).that.is.a( 'object' );
-    expect( instance.constructor._validate ).to.have.property( 'nameCantBeType' ).that.is.a( 'function' );
+    expect( instance ).to.have.property( '_validate' ).that.is.a( 'object' );
+    expect( instance._validate ).to.have.property( 'nameCantBeType' ).that.is.a( 'function' );
   } );
 
   it( 'should have a _hooks property', () => {
-    expect( instance.constructor ).to.have.property( '_hooks' ).that.is.a( 'object' );
-    expect( instance.constructor._hooks ).to.have.property( 'nameToLower' ).that.is.a( 'object' );
-    expect( instance.constructor._hooks.nameToLower ).to.have.property( 'fn' ).that.is.a( 'function' );
-    expect( instance.constructor._hooks.nameToLower ).to.have.property( 'action' ).that.is.a( 'string' );
+    expect( instance ).to.have.property( '_hooks' ).that.is.a( 'object' );
+    expect( instance._hooks ).to.have.property( 'nameToLower' ).that.is.a( 'object' );
+    expect( instance._hooks.nameToLower ).to.have.property( 'fn' ).that.is.a( 'function' );
+    expect( instance._hooks.nameToLower ).to.have.property( 'action' ).that.is.a( 'string' );
   } );
 
 } );

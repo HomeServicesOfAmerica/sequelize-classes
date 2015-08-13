@@ -1,11 +1,11 @@
 {
   "name": "sequelize-six",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Library to build Sequelize models using ES6 code",
   "main": "index.js",
   "scripts": {
     "test": "mocha --compilers js:babel/register",
-    "build": "babel src -d lib -b regenerator",
+    "build": "babel src -d lib",
     "prepublish": "npm run build",
     "pretest": "npm run build"
   },

@@ -44,6 +44,19 @@ export function beforeCreate () {
   return hook( 'beforeCreate' );
 }
 
+export function beforeUpdate () {
+  return hook( 'beforeUpdate' );
+}
+
+export function extend ( Extension ) {
+  return target => {
+    target._extensions = target._extensions || [];
+    let extension = new Extension();
+    extension.generateOptions();
+    target._extensions.push( extension );
+  };
+}
+
 export function index ( options = { noName: false } ) {
   return ( target, key, descriptor ) => {
     target.constructor._indexes = target.constructor._indexes || [];
