@@ -1,6 +1,12 @@
 # Sequelize Six
 ![travis-ci](https://travis-ci.org/ConciergeAuctions/sequelize-six.svg?branch=master) [![Stories in Ready](https://badge.waffle.io/ConciergeAuctions/sequelize-six.svg?label=ready&title=Ready)](http://waffle.io/ConciergeAuctions/sequelize-six)
 
+## ALPHA WARNING
+
+This library doesn't currently work, its a work in progress. However enough exists for you to play with and help develop! 
+
+---
+
 #### Overview
 
 Sequelize.js is a fantastic ORM for SQL databases. The one pitfall is that it is not very ES6 friendly in the way you have to declare classes. This library offers some utilities to help make it easy to write your schemas in ES6 syntax with the help of ES7 decorators.
