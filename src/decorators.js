@@ -28,6 +28,26 @@ export function validate () {
   };
 }
 
+export function scope ( ) {
+  return ( target, key, descriptor ) => {
+    if ( typeof descriptor.initializer() !== 'object' ) {
+      throw new Error( 'Scope must be an object' );
+    }
+
+    target.constructor._scopes = target.constructor._scopes || {};
+
+    if ( key === 'defaultScope' ) {
+      target.constructor._defaultScope = descriptor.initializer();
+    } else {
+      target.constructor._scopes[ key ] = descriptor.initializer();
+    }
+
+    delete target[ key ];
+    delete descriptor.initializer;
+  };
+}
+
+
 export function hook ( action ) {
   return ( target, key, descriptor ) => {
     if ( typeof descriptor.value !== 'function' ) {

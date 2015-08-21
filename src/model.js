@@ -9,6 +9,8 @@ import { defineFunctions, getProperties, entries } from './helpers';
 import Sequelize from 'sequelize';
 import _ from 'lodash';
 
+const constructorCleanup = [ '_validate', '_hooks', '_defaultScope', '_scopes' ];
+
 let model;
 
 /**
@@ -39,13 +41,24 @@ export default class Model {
 
   @enumerable( false ) _generated = false;
 
+  @enumerable( false ) _scopes = {};
+
+  @enumerable( false ) _defaultScope = {};
+
   constructor () {
-    // Just need to get rid of the added values on the constructor and inherit them to the instance.
-    this._validate = this.constructor._validate || {};
+    this.cleanConstructor();
+  }
+
+  /**
+   * Clean up the constructor object by moving externally defined items back into the instance and removing
+   * them from the original constructor object.
+   */
+  cleanConstructor () {
+    for ( let item of constructorCleanup ) {
+      this[ item ] = this.constructor[ item ] || {};
+      delete this.constructor[ item ];
+    }
     this._indexes = this.constructor._indexes || [];
-    this._hooks = this.constructor._hooks || {};
-    delete this.constructor._validate;
-    delete this.constructor._hooks;
     delete this.constructor._indexes;
   }
 
@@ -100,7 +113,9 @@ export default class Model {
       '_instanceMethods',
       '_hooks',
       '_getterMethods',
-      '_setterMethods'
+      '_setterMethods',
+      '_defaultScope',
+      '_scopes'
     ];
 
     for ( let field of fields ) {

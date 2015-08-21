@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import Model from './../src/model';
-import { validate, hook, index, beforeCreate, extend } from './../src/decorators';
+import { validate, hook, index, beforeCreate, extend, scope } from './../src/decorators';
 
 let instance;
 
@@ -20,8 +20,12 @@ class Simple extends Model {
   name = 'STRING';
   type = 'STRING';
 
+  @scope() defaultScope = { type: 'test' };
+
+  @scope() withoutTest = { type: { $nin: ['test']}};
+
   @index()
-  uniqueName = { unique: true, fields: ['email'] };
+  uniqueName = { unique: true, fields: ['email']};
 
   static staticTest () {
     console.log( 'static' );
@@ -104,6 +108,11 @@ describe( 'Model instances', () => {
 
   it( 'should modify the declaration of fields with setters', () => {
     expect( instance._fields.name ).to.have.property( 'set' ).that.is.a( 'function' );
+  } );
+
+  it( 'should have a scope and a default scope', () => {
+    expect( instance._scopes ).to.have.property( 'withoutTest' ).that.is.a( 'object' );
+    expect( instance._defaultScope ).to.have.property( 'type' ).that.equals( 'test' );
   } );
 
   it( 'should have a _indexes property', () => {
