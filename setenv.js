@@ -7,4 +7,3 @@ if ( envPath === 'production' ) {
 }
 
 dotenv.config( { path: `./config/.env${envPath}` } );
-dotenv.load();

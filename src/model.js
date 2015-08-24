@@ -12,9 +12,6 @@ import _ from 'lodash';
 // Array of members in which to clean from the constructor.
 const constructorCleanup = [ '_validate', '_hooks', '_defaultScope', '_scopes' ];
 
-// Singleton instance for preventing generating models un
-let model;
-
 /**
  * @class Model
  */
@@ -103,11 +100,11 @@ export default class Model {
    */
   @readOnly()
   declareHooks ( model ) {
-    if ( !model.hasOwnProperty( 'addHook' ) ) {
+    if ( !model.addHook ) {
       throw new Error( 'declareHooks called before model generated' );
     }
 
-    for ( let [ name, hook ] of this._hooks ) {
+    for ( let [ name, hook ] of entries( this._hooks ) ) {
       model.addHook( hook.action, name, hook.fn );
     }
   }
@@ -183,11 +180,8 @@ export default class Model {
    * @returns {Function}
    */
   static exportModel ( ) {
-    var Model = this;
     return ( sequelize, dataTypes ) => {
-      if ( typeof model === 'undefined' ) {
-        model = new Model();
-      }
+      let model = new this();
       model.generateOptions();
       return model.registerModel( sequelize );
     };
