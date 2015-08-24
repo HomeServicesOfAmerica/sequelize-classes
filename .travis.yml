@@ -3,12 +3,19 @@ language: node_js
 node_js:
   - "0.12"
 
+addons:
+  postgresql: "9.3"
+
 before_script:
+  - psql -c 'create database travis_ci_test;' -U postgres
   - npm install gulpjs/gulp-cli#4.0 -g
   - npm install eslint -g
   - npm install babel -g
   - npm install babel-eslint -g
   - npm install mocha -g
+
+env:
+  - NODE_ENV=test
 
 script:
   - gulp build

@@ -1,8 +1,6 @@
 import Sequelize from 'sequelize';
 import { expect } from 'chai';
-import dotenv from 'dotenv';
-
-dotenv.load();
+import './../setenv';
 
 let sequelize;
 
@@ -18,5 +16,11 @@ describe( 'sequelize instance', () => {
   it( 'should be connected and authenticated', done => {
     sequelize.authenticate().then( done ).catch( err => { throw err; } );
   } );
+
+} );
+
+describe( 'importing models', () => {
+
+
 
 } );

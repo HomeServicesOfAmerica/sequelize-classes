@@ -7,3 +7,7 @@ test/
 .travis.yml
 .documentation.d.ts
 gulpfile.babel.js
+
+.env.development
+.env
+.env.sample
