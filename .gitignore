@@ -31,3 +31,5 @@ node_modules
 
 # Ignore our lib folder
 lib
+
+.env

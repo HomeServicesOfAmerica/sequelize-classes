@@ -17,7 +17,10 @@
   "author": "Brad Decker <bhdecker84@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "dotenv": "^1.2.0",
     "lodash": "^3.10.1",
+    "pg": "^4.4.1",
+    "pg-hstore": "^2.3.2",
     "sequelize": "^3.5.1"
   },
   "devDependencies": {
