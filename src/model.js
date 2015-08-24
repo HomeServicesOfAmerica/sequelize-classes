@@ -137,13 +137,26 @@ export default class Model {
     }
   }
 
-  static registerModel () {
-    // TODO: Return sequelize.define this model.
+  registerModel ( sequelize ) {
+    return sequelize.define( this.constructor.name, this._fields, {
+      instanceMethods: this._instanceMethods,
+      indexes: this._indexes,
+      classMethods: this._classMethods,
+      getterMethods: this._getterMethods,
+      setterMethods: this._setterMethods,
+      defaultScope: this._defaultScope,
+      scopes: this._scopes
+    } );
   }
 
-  static exportModel () {
+  static exportModel ( ) {
+    var Model = this;
     return ( sequelize, dataTypes ) => {
-      this.declareTypes( dataTypes );
+      if ( typeof model === 'undefined' ) {
+        model = new Model();
+      }
+      model.generateOptions();
+      return model.registerModel( sequelize );
     };
   }
 

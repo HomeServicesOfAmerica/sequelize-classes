@@ -30,6 +30,7 @@
     "gulp": "git://github.com/gulpjs/gulp.git#4.0",
     "gulp-eslint": "^1.0.0",
     "mocha": "^2.2.5",
-    "should": "^7.0.3"
+    "should": "^7.0.3",
+    "sinon": "^1.16.1"
   }
 }
