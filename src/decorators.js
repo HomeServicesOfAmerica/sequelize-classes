@@ -1,4 +1,8 @@
-
+/**
+ * Decorator that changes the enumerable property on a property.
+ * @param {Boolean} value - what value to set property
+ * @returns {Function} - Function wrapper
+ */
 export function enumerable ( value ) {
   return ( ...params ) => {
     let [ , , descriptor ] = params;
@@ -8,6 +12,10 @@ export function enumerable ( value ) {
   };
 }
 
+/**
+ * Decorator to mark a function or property as readOnly (writable = false)
+ * @returns {Function}
+ */
 export function readOnly ( ) {
   return ( ...params ) => {
     let [ , , descriptor ] = params;
@@ -16,6 +24,10 @@ export function readOnly ( ) {
   };
 }
 
+/**
+ * Decorator to mark a function as a validator method, add the field to the _validate object
+ * @returns {Function}
+ */
 export function validate () {
   return ( target, key, descriptor ) => {
     if ( typeof descriptor.value !== 'function' ) {
@@ -28,6 +40,10 @@ export function validate () {
   };
 }
 
+/**
+ * Decorator to mark a property as being a scope or defaultScope based on the name of the property.
+ * @returns {Function}
+ */
 export function scope ( ) {
   return ( target, key, descriptor ) => {
     if ( typeof descriptor.initializer() !== 'object' ) {
@@ -47,7 +63,11 @@ export function scope ( ) {
   };
 }
 
-
+/**
+ * Mark a function as being a hook and add it to the _hooks config object
+ * @param {String} action - the action to hook into
+ * @returns {Function}
+ */
 export function hook ( action ) {
   return ( target, key, descriptor ) => {
     if ( typeof descriptor.value !== 'function' ) {
@@ -60,14 +80,27 @@ export function hook ( action ) {
   };
 }
 
+/**
+ * Shortcut to the Hook decorator that defines a beforeCreate hook
+ * @returns {Function}
+ */
 export function beforeCreate () {
   return hook( 'beforeCreate' );
 }
 
+/**
+ * Shortcut to the Hook decorator that defines a beforeUpdate hook
+ * @returns {Function}
+ */
 export function beforeUpdate () {
   return hook( 'beforeUpdate' );
 }
 
+/**
+ * Add an extension onto the model, which will inherit all of the extensions' methods and fields
+ * @param {Model} Extension - The Class extended from Model that will be integrated into this Model
+ * @returns {Function}
+ */
 export function extend ( Extension ) {
   return target => {
     target._extensions = target._extensions || [];
@@ -77,6 +110,11 @@ export function extend ( Extension ) {
   };
 }
 
+/**
+ * Marks a property as being an index and addes it to the _indexes array.
+ * @param {object} options - configuration object
+ * @returns {Function}
+ */
 export function index ( options = { noName: false } ) {
   return ( target, key, descriptor ) => {
     target.constructor._indexes = target.constructor._indexes || [];

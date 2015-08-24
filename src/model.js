@@ -1,5 +1,5 @@
 /**
- * @file
+ * @file Defines a class Model for extending other Sequelize Models from.
  * @author Brad Decker <brad.decker@conciergeauctions.com>
  */
 
@@ -9,8 +9,10 @@ import { defineFunctions, getProperties, entries } from './helpers';
 import Sequelize from 'sequelize';
 import _ from 'lodash';
 
+// Array of members in which to clean from the constructor.
 const constructorCleanup = [ '_validate', '_hooks', '_defaultScope', '_scopes' ];
 
+// Singleton instance for preventing generating models un
 let model;
 
 /**
@@ -33,18 +35,28 @@ export default class Model {
   // Object for declaring setters for fields
   @enumerable( false ) _setterMethods = {};
 
+  // Object for declaring validators
   @enumerable( false ) _validate = {};
 
+  // Object for declaring model hooks
   @enumerable( false ) _hooks = {};
 
+  // Array of indexes to create on the schema
   @enumerable( false ) _indexes = [];
 
+  // Boolean to track status of the model.
   @enumerable( false ) _generated = false;
 
+  // Object for declaring scopes.
   @enumerable( false ) _scopes = {};
 
+  // Object to declare base scope.
   @enumerable( false ) _defaultScope = {};
 
+  /**
+   * @constructor
+   * builds the model and calls the cleanConstructor method.
+   */
   constructor () {
     this.cleanConstructor();
   }
@@ -85,8 +97,12 @@ export default class Model {
 
   }
 
+  /**
+   * Loop through the hooks declared in _hooks and add them to the model schema through the addHook method.
+   * @param {Object} model - instance of the model
+   */
   @readOnly()
-  declareHooks () {
+  declareHooks ( model ) {
     if ( !model.hasOwnProperty( 'addHook' ) ) {
       throw new Error( 'declareHooks called before model generated' );
     }
@@ -97,7 +113,7 @@ export default class Model {
   }
 
   /**
-   * Run through all the extensions for this model and inherit from them.
+   * Loop through all of the extensions added into this model and inherit all of the extension methods and fields.
    */
   @readOnly()
   runExtensions () {
@@ -125,7 +141,9 @@ export default class Model {
   }
 
   /**
-   * Split out the functions attached to this
+   * Sequelize-Six requires all of the configuration level fields to be defined prior to registering a model schema
+   * this function generates all of these options, and assigns function definitions to the appropriate configuration
+   * object. If it is called more than once it will not regenerate options, to aid in performance.
    */
   @readOnly()
   generateOptions () {
@@ -137,8 +155,13 @@ export default class Model {
     }
   }
 
+  /**
+   * This is a shortcut to call sequelize.define. It adds in all of the configuration options that are built with
+   * the Sequelize-Six library. Returns the model returned from the define call.
+   * @returns {Model}
+   */
   registerModel ( sequelize ) {
-    return sequelize.define( this.constructor.name, this._fields, {
+    let model = sequelize.define( this.constructor.name, this._fields, {
       instanceMethods: this._instanceMethods,
       indexes: this._indexes,
       classMethods: this._classMethods,
@@ -147,8 +170,18 @@ export default class Model {
       defaultScope: this._defaultScope,
       scopes: this._scopes
     } );
+
+    this.declareHooks( model );
+    return model;
   }
 
+  /**
+   * Sequelize allows you to create a export function in which you define your models. This function allows you to
+   * export Sequelize-Six Models without creating an instance or manually building these functions. Simply do
+   * export default Model.exportModel();
+   *
+   * @returns {Function}
+   */
   static exportModel ( ) {
     var Model = this;
     return ( sequelize, dataTypes ) => {

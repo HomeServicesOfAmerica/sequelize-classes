@@ -1,4 +1,4 @@
-
+// Array of method names to ignore/prevent from being added into our models
 const ignore = [
   'constructor',
   'Model',
@@ -9,12 +9,21 @@ const ignore = [
   'prototype'
 ];
 
+/**
+ * Iterator function to step over a object and its keys.
+ * @param {Object} obj - the Object to iterate over.
+ */
 export function* entries ( obj ) {
   for ( let key of Object.keys( obj ) ) {
     yield [ key, obj[ key ]];
   }
 }
 
+/**
+ * Get the properties on the model, loops over Object.keys and thus skips over non-enumerable properties
+ * @param {object} model - Model instance
+ * @returns {Object}
+ */
 export function getProperties ( model ) {
   let propertyNames = Object.keys( model );
   let properties = {};
@@ -26,9 +35,15 @@ export function getProperties ( model ) {
   return properties;
 }
 
+/**
+ * Responsible for looping through all functions on the model and assigning them to the appropriate configuration
+ * object
+ * @param {object} model - instance of our model
+ */
 export function defineFunctions ( model ) {
 
   for ( let [ target, name, method ] of findFunctions( model ) ) {
+    // noinspection JSUnusedAssignment
     model[ target ][ name ] = method;
   }
 
@@ -36,7 +51,13 @@ export function defineFunctions ( model ) {
 
 /** helpers **/
 
-function addToDefinition ( field, method, type = 'get' ) {
+/**
+ * Adds getter and/or setter methods to a field definition.
+ * @param {String|Object} field - the field declaration
+ * @param {Object} method - function descriptor
+ * @returns {Object} - Field declaration
+ */
+function addToDefinition ( field, method ) {
   if ( typeof field !== 'object' ) {
     field = { type: field };
   }
@@ -47,6 +68,10 @@ function addToDefinition ( field, method, type = 'get' ) {
   return field;
 }
 
+/**
+ * Iterator function that lets us loop through a model's functions
+ * @param {object} model - Model instance
+ */
 function* findFunctions ( model ) {
 
   let prototype = Object.getPrototypeOf( model );
@@ -68,6 +93,11 @@ function* findFunctions ( model ) {
   }
 }
 
+/**
+ * Determines which configuration object to add the function to based on it's descriptor's properties
+ * @param {object} method - function descriptor
+ * @param {object} model - model instance
+ */
 function* parseFunction ( method, model ) {
 
   if ( method.get || method.set ) {
@@ -93,6 +123,11 @@ function* parseFunction ( method, model ) {
   yield [ target, method.name, method.value ];
 }
 
+/**
+ * filter function to filter out functions we aren't interested in.
+ * @param {object} method - function descriptor
+ * @returns {Boolean}
+ */
 function filterFunction ( method ) {
 
   if ( ignore.indexOf( method.name ) >= 0 ) {
@@ -107,24 +142,41 @@ function filterFunction ( method ) {
 
 }
 
+/**
+ * Gets a array of functions that belong to object.
+ * @param {object} object
+ * @param {Boolean} isStatic - when true, object is the constructor of the model
+ * @returns {Array}
+ */
 function getFunctions ( object, isStatic = false ) {
   let names = Object.getOwnPropertyNames( object );
-  let funcs = [];
+  let functions = [];
 
   for ( let name of names ) {
     let descriptor = Object.getOwnPropertyDescriptor( object, name );
     descriptor.name = name;
     descriptor.isStatic = isStatic;
-    funcs.push( descriptor );
+    functions.push( descriptor );
   }
 
-  return funcs;
+  return functions;
 }
 
+/**
+ * Helper function to get field name from a getter or setter name.
+ * @param {String} name
+ * @returns {String}
+ */
 function fieldName ( name ) {
   return name.replace( /^_/, '' );
 }
 
+/**
+ * Helper function to test if a string matches a field in object
+ * @param {String} name
+ * @param {object} object - object to test
+ * @returns {boolean}
+ */
 function isField ( name, object ) {
   return name.startsWith( '_' ) && object._fields[ fieldName( name ) ];
 }
