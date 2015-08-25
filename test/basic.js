@@ -70,7 +70,7 @@ describe( 'Model instances', () => {
     expect( instance.constructor.name ).to.equal( 'Simple' );
   } );
 
-  it( 'should have generate options properly', () => {
+  it( 'should have generate options property', () => {
     expect( instance ).to.have.property( 'generateOptions' ).that.is.a( 'function' );
     instance.generateOptions();
   } );
@@ -84,7 +84,7 @@ describe( 'Model instances', () => {
 
   it( 'should collect static functions into the _classMethods object', () => {
     expect( instance._classMethods ).to.have.property( 'staticTest' ).that.is.a( 'function' );
-    expect( instance._instanceMethods ).to.not.have.property( 'nameToLower' );
+    expect( instance._classMethods ).to.not.have.property( 'nameToLower' );
   } );
 
   it( 'should collect member methods into the _instanceMethods object', () => {

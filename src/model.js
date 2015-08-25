@@ -24,7 +24,7 @@ export default class Model {
   @enumerable( false ) _instanceMethods = {};
 
   // Object for storing class methods
-  @enumerable( false )_classMethods = {};
+  @enumerable( false ) _classMethods = {};
 
   // Object for declaring getters for fields
   @enumerable( false ) _getterMethods = {};
@@ -165,7 +165,8 @@ export default class Model {
       getterMethods: this._getterMethods,
       setterMethods: this._setterMethods,
       defaultScope: this._defaultScope,
-      scopes: this._scopes
+      scopes: this._scopes,
+      validate: this._validate
     } );
 
     this.declareHooks( model );
