@@ -12,8 +12,6 @@ class simpleExtension extends Model {
 /**
  * This is a simple test class to test some of the most basic features of the module
  * @class Simple
- * @augments mongoose.Model
- * @inheritdoc mongoose.Model
  */
 @extend( simpleExtension )
 class Simple extends Model {
