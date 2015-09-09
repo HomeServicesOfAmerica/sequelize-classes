@@ -12,6 +12,8 @@ import _ from 'lodash';
 // Array of members in which to clean from the constructor.
 const constructorCleanup = [ '_validate', '_hooks', '_defaultScope', '_scopes' ];
 
+let relatedModels = {};
+
 /**
  * @class Model
  */
@@ -49,6 +51,7 @@ export default class Model {
 
   // Object to declare base scope.
   @enumerable( false ) _defaultScope = {};
+
 
   /**
    * @constructor
@@ -180,10 +183,10 @@ export default class Model {
     }
 
     for ( let relation of this.constructor._relationships ) {
-      if ( typeof this.relatedModels === 'undefined' || typeof this.relatedModels[ relation.model ] === 'undefined' ) {
-        this.relatedModels[ relation.model ] = sequelize.import( relation.file );
+      if ( typeof relatedModels[ relation.model ] === 'undefined' ) {
+        relatedModels[ relation.model ] = sequelize.import( relation.file );
       }
-      model[ relation.type ]( this.relatedModels[ relation.model ], relation.options );
+      model[ relation.type ]( relatedModels[ relation.model ], relation.options );
     }
   }
 

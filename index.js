@@ -1,8 +1,4 @@
 var decorators = require( './lib/decorators' );
+var _ = require( 'lodash' );
 
-module.exports = {
-  Model: require( './lib/model' ),
-  validate: decorators.validate,
-  index: decorators.index,
-  hook: decorators.hook
-};
+module.exports = _.merge( { Model: require( './lib/model' ) }, decorators );

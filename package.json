@@ -1,6 +1,6 @@
 {
   "name": "sequelize-six",
-  "version": "0.0.3",
+  "version": "0.0.6",
   "description": "Library to build Sequelize models using ES6 code",
   "main": "index.js",
   "scripts": {
@@ -17,6 +17,7 @@
   "author": "Brad Decker <bhdecker84@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "callsite": "^1.0.0",
     "dotenv": "^1.2.0",
     "lodash": "^3.10.1",
     "pg": "^4.4.1",

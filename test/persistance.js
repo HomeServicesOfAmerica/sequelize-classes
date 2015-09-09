@@ -43,7 +43,7 @@ describe( 'importing models from external files', () => {
 
     it( 'should be able to be imported again without regenerating the model', () => {
       Test = sequelize.import( './resources/test.js' );
-      expect( modelSpy.calledTwice ).to.be.true;
+      expect( modelSpy.calledThrice ).to.be.true;
     } );
 
     it( 'should have a build method', () => {
