@@ -279,6 +279,32 @@ export function afterInit () {
   return hook( 'afterInit' );
 }
 
+export function relationship ( type, model, file, options = {} ) {
+  return target => {
+    if ( [ 'belongsTo', 'hasOne', 'hasMany', 'belongsToMany' ].indexOf( type ) === -1 ) {
+      throw new Error( 'That relation is not supported' );
+    }
+    target._relationships = target._relationships || [];
+    target._relationships.push( { type, model, file, options } );
+  };
+}
+
+export function belongsTo ( model, file, options = {} ) {
+  return relationship( 'belongsTo', model, file, options );
+}
+
+export function hasOne ( model, file, options = {} ) {
+  return relationship( 'hasOne', model, file, options );
+}
+
+export function hasMany ( model, file, options = {} ) {
+  return relationship( 'hasMany', model, file, options );
+}
+
+export function belongsToMany ( model, file, options = {} ) {
+  return relationship( 'belongsToMany', model, file, options );
+}
+
 /**
  * Add an extension onto the model, which will inherit all of the extensions' methods and fields
  * @param {Model} Extension - The Class extended from Model that will be integrated into this Model

@@ -170,7 +170,21 @@ export default class Model {
     } );
 
     this.declareHooks( model );
+    this.declareRelations( model, sequelize );
     return model;
+  }
+
+  declareRelations ( model, sequelize ) {
+    if ( !this.constructor._extensions ) {
+      return;
+    }
+
+    for ( let relation of this.constructor._relationships ) {
+      if ( typeof this.relatedModels === 'undefined' || typeof this.relatedModels[ relation.model ] === 'undefined' ) {
+        this.relatedModels[ relation.model ] = sequelize.import( relation.file );
+      }
+      model[ relation.type ]( this.relatedModels[ relation.model ], relation.options );
+    }
   }
 
   /**
