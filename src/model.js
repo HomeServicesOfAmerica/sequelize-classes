@@ -175,7 +175,7 @@ export default class Model {
   }
 
   declareRelations ( model, sequelize ) {
-    if ( !this.constructor._extensions ) {
+    if ( !this.constructor._relationships ) {
       return;
     }
 
