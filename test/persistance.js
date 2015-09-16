@@ -1,17 +1,28 @@
 import Sequelize from 'sequelize';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import * as helpers from './../src/helpers';
-import './../setenv';
+import { SequelizeSix } from '../src/sequelizeSix';
+import TestModel from './resources/test';
+import RelatedModel from './resources/relatedModel';
+import * as helpers from '../src/helpers';
+import '../setenv';
 
 let sequelize, Test, modelSpy, test;
 
 before( () => {
-  sequelize = new Sequelize( process.env.DATABASE, process.env.USERNAME, process.env.PASSWORD, {
-    port: process.env.PORT,
-    logging: false,
-    dialect: 'postgres'
-  } );
+  var options = {
+    database: process.env.DATABASE,
+    username: process.env.USERNAME,
+    pass: process.env.PASSWORD,
+    config: {
+      port: process.env.PORT,
+      logging: false,
+      dialect: 'postgres'
+    }
+  }
+  let sequelizeSix = new SequelizeSix( options, [ TestModel, RelatedModel ] );
+  sequelize = sequelizeSix.base;
+  Test = sequelizeSix.Test;
   modelSpy = spy( helpers, 'defineFunctions' );
 } );
 
@@ -27,7 +38,6 @@ describe( 'importing models from external files', () => {
 
   before( done => {
     modelSpy.reset();
-    Test = sequelize.import( './resources/test.js' );
     Test.sync( { force: true } ).then( () => done() ).catch( done );
   } );
 
@@ -39,11 +49,6 @@ describe( 'importing models from external files', () => {
 
     it( 'should have been defined', () => {
       expect( sequelize.isDefined( 'Test' ) ).to.be.true;
-    } );
-
-    it( 'should be able to be imported again without regenerating the model', () => {
-      Test = sequelize.import( './resources/test.js' );
-      expect( modelSpy.calledThrice ).to.be.true;
     } );
 
     it( 'should have a build method', () => {

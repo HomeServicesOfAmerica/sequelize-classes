@@ -279,30 +279,30 @@ export function afterInit () {
   return hook( 'afterInit' );
 }
 
-export function relationship ( type, model, file, options = {} ) {
+export function relationship ( type, model, options = {} ) {
   return target => {
     if ( [ 'belongsTo', 'hasOne', 'hasMany', 'belongsToMany' ].indexOf( type ) === -1 ) {
       throw new Error( 'That relation is not supported' );
     }
     target._relationships = target._relationships || [];
-    target._relationships.push( { type, model, file, options } );
+    target._relationships.push( { type, model, options } );
   };
 }
 
-export function belongsTo ( model, file, options = {} ) {
-  return relationship( 'belongsTo', model, file, options );
+export function belongsTo ( model, options = {} ) {
+  return relationship( 'belongsTo', model, options );
 }
 
-export function hasOne ( model, file, options = {} ) {
-  return relationship( 'hasOne', model, file, options );
+export function hasOne ( model, options = {} ) {
+  return relationship( 'hasOne', model, options );
 }
 
-export function hasMany ( model, file, options = {} ) {
-  return relationship( 'hasMany', model, file, options );
+export function hasMany ( model, options = {} ) {
+  return relationship( 'hasMany', model, options );
 }
 
-export function belongsToMany ( model, file, options = {} ) {
-  return relationship( 'belongsToMany', model, file, options );
+export function belongsToMany ( model, options = {} ) {
+  return relationship( 'belongsToMany', model, options );
 }
 
 /**

@@ -1,6 +1,6 @@
 {
   "name": "sequelize-six",
-  "version": "0.0.6",
+  "version": "0.0.8",
   "description": "Library to build Sequelize models using ES6 code",
   "main": "index.js",
   "scripts": {

@@ -1,4 +1,4 @@
-import Model from './../../src/model';
+import { Model } from './../../src/model';
 import Sequelize from 'sequelize';
 import Extension from './extension';
 import { extend, hasOne } from './../../src/decorators';
@@ -10,4 +10,4 @@ class Test extends Model {
   type = { type: Sequelize.ENUM( 'test', 'production', 'development' ) };
 }
 
-export default Test.exportModel();
+export default Test;

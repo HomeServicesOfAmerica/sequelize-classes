@@ -1,4 +1,4 @@
-import Model from './../../src/model';
+import { Model } from './../../src/model';
 import { hook, validate } from './../../src/decorators';
 import Sequelize from 'sequelize';
 

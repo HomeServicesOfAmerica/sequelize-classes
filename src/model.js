@@ -17,7 +17,7 @@ let relatedModels = {};
 /**
  * @class Model
  */
-export default class Model {
+export class Model {
 
   // Fields object for declaring model/table fields
   @enumerable( false ) _fields = {};
@@ -173,7 +173,7 @@ export default class Model {
     } );
 
     this.declareHooks( model );
-    this.declareRelations( model, sequelize );
+    // this.declareRelations( model, sequelize );
     return model;
   }
 
