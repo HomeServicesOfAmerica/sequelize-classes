@@ -3,7 +3,7 @@ import Sequelize from 'sequelize';
 import Extension from './extension';
 import { extend, hasOne } from './../../src/decorators';
 
-@hasOne( 'RelatedModel', __dirname +  '/relatedModel.js', {} )
+@hasOne( 'RelatedModel', {} )
 @extend( Extension )
 class Test extends Model {
   name = { type: Sequelize.STRING };

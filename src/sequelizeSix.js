@@ -54,6 +54,6 @@ export class SequelizeSix {
   }
 
   async query ( query, options = {} ) {
-    return await this.sequelize.query(query, options);
+    return await this.sequelize.query( query, options );
   }
 }
