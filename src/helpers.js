@@ -53,10 +53,10 @@ export function defineFunctions ( model ) {
 
 /**
  * Adds getter and/or setter methods to a field definition.
- * @param {String|Object} field - the field declaration
- * @param {Object} method - function descriptor
- * @returns {Object} - Field declaration
- */
+* @param {String|Object} field - the field declaration
+* @param {Object} method - function descriptor
+* @returns {Object} - Field declaration
+*/
 function addToDefinition ( field, method ) {
   if ( typeof field !== 'object' ) {
     field = { type: field };

@@ -52,4 +52,8 @@ export class SequelizeSix {
   async syncDatabase ( force = false, options = {} ) {
     return await this.sequelize.sync( _.assign( options, { force } ) );
   }
+
+  async query ( query, options = {} ) {
+    return await this.sequelize.query(query, options);
+  }
 }
