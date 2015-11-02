@@ -3,6 +3,10 @@
   "version": "0.0.9",
   "description": "Library to build Sequelize models using ES6 code",
   "main": "index.js",
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/ConciergeAuctions/sequelize-six"
+  },
   "scripts": {
     "test": "mocha --compilers js:babel/register",
     "build": "babel src -d lib",
