@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Model } from './../src/sequelizeSix';
+import { Model } from './../src/builder';
 import { validate, hook, index, beforeCreate, extend, scope } from './../src/decorators';
 
 let instance;

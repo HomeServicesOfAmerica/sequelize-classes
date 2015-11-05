@@ -1,7 +1,7 @@
 import Sequelize from 'sequelize';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { SequelizeSix } from '../src/sequelizeSix';
+import { Builder } from '../src/builder';
 import TestModel from './resources/test';
 import RelatedModel from './resources/relatedModel';
 import * as helpers from '../src/helpers';
@@ -20,7 +20,7 @@ before( () => {
       dialect: 'postgres'
     }
   }
-  let sequelizeSix = new SequelizeSix( options, [ TestModel, RelatedModel ] );
+  let sequelizeSix = new Builder( options, [ TestModel, RelatedModel ] );
   sequelize = sequelizeSix.base;
   Test = sequelizeSix.Test;
   modelSpy = spy( helpers, 'defineFunctions' );

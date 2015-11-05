@@ -3,7 +3,7 @@ import Sequelize from 'sequelize';
 export * from './decorators';
 export * from './model';
 
-export class SequelizeSix {
+export class Builder {
   sequelize = null;
   models = [];
   loadedModels = {};

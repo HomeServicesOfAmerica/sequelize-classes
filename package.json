@@ -1,11 +1,11 @@
 {
-  "name": "sequelize-six",
-  "version": "0.0.9",
+  "name": "sequelize-classes",
+  "version": "0.1.0",
   "description": "Library to build Sequelize models using ES6 code",
   "main": "index.js",
   "repository" : {
     "type" : "git",
-    "url" : "https://github.com/ConciergeAuctions/sequelize-six"
+    "url" : "https://github.com/ConciergeAuctions/sequelize-classes"
   },
   "scripts": {
     "test": "mocha --compilers js:babel/register",

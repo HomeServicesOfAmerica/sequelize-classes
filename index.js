@@ -1,1 +1,1 @@
-module.exports = require( './lib/sequelizeSix' );
+module.exports = require( './lib/builder' );
