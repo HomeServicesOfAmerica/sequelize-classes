@@ -3,16 +3,14 @@
  * @author Brad Decker <brad.decker@conciergeauctions.com>
  */
 
-import { readOnly, enumerable } from './decorators';
-import { defineFunctions, getProperties, entries } from './helpers';
-
+import {readOnly, enumerable} from './decorators';
+import {defineFunctions, getProperties} from './helpers';
 import Sequelize from 'sequelize';
-import _ from 'lodash';
+import lodash from 'lodash';
 
 // Array of members in which to clean from the constructor.
-const constructorCleanup = [ '_validate', '_hooks', '_defaultScope', '_scopes' ];
-
-let relatedModels = {};
+const constructorCleanup = ['_validate', '_hooks', '_defaultScope', '_scopes'];
+const relatedModels = {};
 
 /**
  * @class Model
@@ -20,44 +18,47 @@ let relatedModels = {};
 export class Model {
 
   // Fields object for declaring model/table fields
-  @enumerable( false ) _fields = {};
+  @enumerable(false) _fields = {};
 
   // Object for storing instance methods
-  @enumerable( false ) _instanceMethods = {};
+  @enumerable(false) _instanceMethods = {};
 
   // Object for storing class methods
-  @enumerable( false ) _classMethods = {};
+  @enumerable(false) _classMethods = {};
 
   // Object for declaring getters for fields
-  @enumerable( false ) _getterMethods = {};
+  @enumerable(false) _getterMethods = {};
 
   // Object for declaring setters for fields
-  @enumerable( false ) _setterMethods = {};
+  @enumerable(false) _setterMethods = {};
 
   // Object for declaring validators
-  @enumerable( false ) _validate = {};
+  @enumerable(false) _validate = {};
 
   // Object for declaring model hooks
-  @enumerable( false ) _hooks = {};
+  @enumerable(false) _hooks = {};
 
   // Array of indexes to create on the schema
-  @enumerable( false ) _indexes = [];
+  @enumerable(false) _indexes = [];
 
   // Boolean to track status of the model.
-  @enumerable( false ) _generated = false;
+  @enumerable(false) _generated = false;
 
   // Object for declaring scopes.
-  @enumerable( false ) _scopes = {};
+  @enumerable(false) _scopes = {};
 
   // Object to declare base scope.
-  @enumerable( false ) _defaultScope = {};
+  @enumerable(false) _defaultScope = {};
+
+  // Object Model Options
+  @enumerable(false) _options = {};
 
 
   /**
    * @constructor
    * builds the model and calls the cleanConstructor method.
    */
-  constructor () {
+  constructor() {
     this.cleanConstructor();
   }
 
@@ -65,11 +66,11 @@ export class Model {
    * Clean up the constructor object by moving externally defined items back into the instance and removing
    * them from the original constructor object.
    */
-  cleanConstructor () {
-    for ( let item of constructorCleanup ) {
-      this[ item ] = this.constructor[ item ] || {};
-      delete this.constructor[ item ];
-    }
+  cleanConstructor() {
+    constructorCleanup.forEach(item => {
+      this[item] = this.constructor[item] || {};
+      delete this.constructor[item];
+    });
     this._indexes = this.constructor._indexes || [];
     delete this.constructor._indexes;
   }
@@ -79,22 +80,22 @@ export class Model {
    * @param dataTypes
    */
   @readOnly()
-  declareTypes ( dataTypes = Sequelize ) {
-
+  declareTypes(dataTypes = Sequelize) {
     // TODO: Collect member variables and replace string data types with true data types.
-    if ( this._fields.length === 0 ) {
+    if (this._fields.length === 0) {
       this.generateOptions();
     }
 
-    for ( let [ field, definition ] of entries( this._fields ) ) {
-      if ( typeof definition === 'object' ) {
-        definition.type = dataTypes[ definition.type ];
+    Object.keys(this._fields).forEach(key => {
+      let definition = this._fields[key];
+      console.log(definition);
+      if (typeof definition === 'object') {
+        definition.type = dataTypes[definition.type];
       } else {
-        definition = dataTypes[ definition ];
+        definition = dataTypes[definition];
       }
-      this._fields[ field ] = definition;
-    }
-
+      this._fields[key] = definition;
+    });
   }
 
   /**
@@ -102,26 +103,27 @@ export class Model {
    * @param {Object} model - instance of the model
    */
   @readOnly()
-  declareHooks ( model ) {
-    if ( !model.addHook ) {
-      throw new Error( 'declareHooks called before model generated' );
+  declareHooks(model) {
+    if (!model.addHook) {
+      throw new Error('declareHooks called before model generated');
     }
 
-    for ( let [ name, hook ] of entries( this._hooks ) ) {
-      model.addHook( hook.action, name, hook.fn );
-    }
+    Object.keys(this._hooks).forEach(key => {
+      const hook = this._hooks[key];
+      model.addHook(hook.action, key, hook.fn);
+    });
   }
 
   /**
    * Loop through all of the extensions added into this model and inherit all of the extension methods and fields.
    */
   @readOnly()
-  runExtensions () {
-    if ( !this.constructor._extensions ) {
+  runExtensions() {
+    if (!this.constructor._extensions) {
       return;
     }
 
-    let fields = [
+    const fields = [
       '_fields',
       '_validate',
       '_indexes',
@@ -134,10 +136,9 @@ export class Model {
       '_scopes'
     ];
 
-    for ( let field of fields ) {
-      this[ field ] = _.merge( ..._.map( this.constructor._extensions, field ), this[ field ] );
+    for (const field of fields) {
+      this[field] = lodash.merge(...lodash.map(this.constructor._extensions, field), this[field]);
     }
-
   }
 
   /**
@@ -146,10 +147,10 @@ export class Model {
    * object. If it is called more than once it will not regenerate options, to aid in performance.
    */
   @readOnly()
-  generateOptions () {
-    if ( !this._generated ) {
-      this._fields = getProperties( this );
-      defineFunctions( this );
+  generateOptions() {
+    if (!this._generated) {
+      this._fields = getProperties(this);
+      defineFunctions(this);
       this.runExtensions();
       this._generated = true;
     }
@@ -160,8 +161,8 @@ export class Model {
    * the Sequelize-Six library. Returns the model returned from the define call.
    * @returns {Model}
    */
-  registerModel ( sequelize ) {
-    let model = sequelize.define( this.constructor.name, this._fields, {
+  registerModel(sequelize) {
+    const model = sequelize.define(this.constructor.name, this._fields, {
       instanceMethods: this._instanceMethods,
       indexes: this._indexes,
       classMethods: this._classMethods,
@@ -169,24 +170,25 @@ export class Model {
       setterMethods: this._setterMethods,
       defaultScope: this._defaultScope,
       scopes: this._scopes,
-      validate: this._validate
-    } );
+      validate: this._validate,
+      ...this._options
+    });
 
-    this.declareHooks( model );
+    this.declareHooks(model);
     // this.declareRelations( model, sequelize );
     return model;
   }
 
-  declareRelations ( model, sequelize ) {
-    if ( !this.constructor._relationships ) {
+  declareRelations(model, sequelize) {
+    if (!this.constructor._relationships) {
       return;
     }
 
-    for ( let relation of this.constructor._relationships ) {
-      if ( typeof relatedModels[ relation.model ] === 'undefined' ) {
-        relatedModels[ relation.model ] = sequelize.import( relation.file );
+    for (const relation of this.constructor._relationships) {
+      if (typeof relatedModels[relation.model] === 'undefined') {
+        relatedModels[relation.model] = sequelize.import(relation.file);
       }
-      model[ relation.type ]( relatedModels[ relation.model ], relation.options );
+      model[relation.type](relatedModels[relation.model], relation.options);
     }
   }
 
@@ -197,11 +199,11 @@ export class Model {
    *
    * @returns {Function}
    */
-  static exportModel ( ) {
-    return ( sequelize, dataTypes ) => {
-      let model = new this();
+  static exportModel() {
+    return sequelize => {
+      const model = new this();
       model.generateOptions();
-      return model.registerModel( sequelize );
+      return model.registerModel(sequelize);
     };
   }
 

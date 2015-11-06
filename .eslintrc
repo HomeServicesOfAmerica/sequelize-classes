@@ -1,55 +1,9 @@
+// Use this file as a starting point for your project's .eslintrc.
+// Copy this file, and add rule overrides as needed.
 {
-  "parser": "babel-eslint",
-  "env": {
-    "browser": true,
-    "amd": true,
-    "jquery": true,
-    "node": true,
-    "mocha": true
-  },
-  "ecmaFeatures": {
-    "blockBindings": true,
-    "forOf": true,
-    "jsx": true,
-    "arrowFunctions": true,
-    "templateStrings": true,
-    "defaultParams": true,
-    "generators": true,
-    "objectLiteralShorthandMethods": true,
-    "modules": true,
-    "destructuring": true,
-    "classes": true,
-    "restParams": true,
-    "spread": true
-  },
+  "extends": "airbnb",
   "rules": {
-    "semi": 2,
-    "no-trailing-spaces": 0,
-    "no-console": 0,
-    "no-underscore-dangle": 0,
-    "camelcase": 0,
-    "quotes": [2, "single", "avoid-escape"],
-    "space-before-function-paren": [2, "always"],
-    "space-after-keywords": [2, "always"],
-    "object-curly-spacing": [2, "always", {
-      "objectsInObjects": false,
-      "arraysInObjects": false
-    }],
-    "computed-property-spacing": [2, "always"],
-    "array-bracket-spacing": [2, "always", {
-      "singleValue": false,
-      "objectsInArrays": false,
-      "arraysInArrays": false
-
-    }],
-    "space-in-parens": [2, "always"],
-    "spaced-comment": [2, "always"],
-    "eqeqeq": [2, "smart"],
-    "no-else-return": 2,
-    "yoda": [2, "never", { "exceptRange": true }]
-  },
-  "globals": {
-    "angular": true
-  },
-  "plugins": []
+    "comma-dangle": [2, "never"],
+    "no-trailing-spaces": [2, { "skipBlankLines": true }]
+  }
 }

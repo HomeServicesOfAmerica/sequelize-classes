@@ -1,5 +1,6 @@
-import Sequelize from 'sequelize';
-import { expect } from 'chai';
+/* eslint-disable no-unused-expressions */
+import {expect} from './utils/chai';
+import {describe, it, before} from 'mocha';
 import { spy } from 'sinon';
 import { Builder } from '../src/builder';
 import TestModel from './resources/test';
@@ -7,10 +8,13 @@ import RelatedModel from './resources/relatedModel';
 import * as helpers from '../src/helpers';
 import '../setenv';
 
-let sequelize, Test, modelSpy, test;
+let sequelize;
+let Test;
+let modelSpy;
+let test;
 
-before( () => {
-  var options = {
+before(() => {
+  const options = {
     database: process.env.DATABASE,
     username: process.env.USERNAME,
     pass: process.env.PASSWORD,
@@ -19,72 +23,62 @@ before( () => {
       logging: false,
       dialect: 'postgres'
     }
-  }
-  let sequelizeSix = new Builder( options, [ TestModel, RelatedModel ] );
-  sequelize = sequelizeSix.base;
-  Test = sequelizeSix.Test;
-  modelSpy = spy( helpers, 'defineFunctions' );
-} );
+  };
+  const sequelizeClasses = new Builder(options, [TestModel, RelatedModel]);
+  sequelize = sequelizeClasses.base;
+  Test = sequelizeClasses.Test;
+  modelSpy = spy(helpers, 'defineFunctions');
+});
 
-describe( 'sequelize instance', () => {
+describe('sequelize instance', () => {
+  it('should be connected and authenticated', () => {
+    return expect(sequelize.authenticate()).to.be.fulfilled;
+  });
+});
 
-  it( 'should be connected and authenticated', done => {
-    sequelize.authenticate().then( done ).catch( err => { throw err; } );
-  } );
-
-} );
-
-describe( 'importing models from external files', () => {
-
-  before( done => {
+describe('importing models from external files', () => {
+  before(() => {
     modelSpy.reset();
-    Test.sync( { force: true } ).then( () => done() ).catch( done );
-  } );
+    return expect(Test.sync({force: true})).to.be.fulfilled;
+  });
 
-  it( 'should have imported the model successfully', () => {
-    expect( Test ).to.have.property( 'find' ).that.is.a( 'function' );
-  } );
+  it('should have imported the model successfully', () => {
+    expect(Test).to.have.property('find').that.is.a('function');
+  });
 
-  describe( 'Test Model', () => {
+  describe('Test Model', () => {
+    it('should have been defined', () => {
+      expect(sequelize.isDefined('Test')).to.be.true;
+    });
 
-    it( 'should have been defined', () => {
-      expect( sequelize.isDefined( 'Test' ) ).to.be.true;
-    } );
-
-    it( 'should have a build method', () => {
-      expect( Test ).to.have.property( 'build' ).that.is.a( 'function' );
+    it('should have a build method', () => {
+      expect(Test).to.have.property('build').that.is.a('function');
       test = Test.build();
-    } );
+    });
 
-    it( 'should have all fields from model and extension', () => {
-      expect( test ).to.have.property( 'name' ).that.is.undefined;
-      expect( test ).to.have.property( 'value' ).that.is.undefined;
-    } );
+    it('should have all fields from model and extension', () => {
+      expect(test).to.have.property('name').that.is.undefined;
+      expect(test).to.have.property('value').that.is.undefined;
+    });
 
-    it( 'should be able to save an instance to the database', done => {
+    it('should be able to save an instance to the database', done => {
       test.name = 'Brad';
       test.color = 'green';
-      test.save().then( () => done() ).catch( done );
-    } );
+      test.save().then(() => done()).catch(done);
+    });
 
-    it( 'should be able to be found', done => {
-      Test.findOne( { where: { name: 'Brad' }} ).then( obj => {
-        expect( obj ).to.have.property( 'name' ).that.equals( 'Brad' );
-        expect( obj ).to.have.property( 'value' ).that.equals( 'green' );
-        return done();
-      } ).catch( done );
-    } );
+    it('should be able to be found', () => {
+      return expect(Test.findOne({where: {name: 'Brad'}})).to.eventually.have.property('name').that.equals('Brad');
+    });
 
-    it( 'should not allow a color other then green', done => {
+    it('should not allow a color other then green', () => {
       test.color = 'blue';
-      test.save().then( () => done( new Error( 'Allowed save' ) ) ).catch( () => done() );
-    } );
+      return expect(test.save()).to.be.rejected;
+    });
 
-    it( 'should not allow a uppercase character in value', done => {
+    it('should not allow a uppercase character in value', () => {
       test.value = 'Green';
-      test.save().then( () => done( new Error( 'Allowed save' ) ) ).catch( () => done() );
-    } );
-
-  } );
-
-} );
+      return expect(test.save()).to.be.rejected;
+    });
+  });
+});
