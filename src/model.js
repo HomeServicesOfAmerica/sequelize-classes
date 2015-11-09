@@ -168,8 +168,6 @@ export class Model {
       classMethods: this._classMethods,
       getterMethods: this._getterMethods,
       setterMethods: this._setterMethods,
-      defaultScope: this._defaultScope,
-      scopes: this._scopes,
       validate: this._validate,
       ...this._options
     });

@@ -4,8 +4,8 @@ import eslint from 'gulp-eslint';
 /**
  * Eslint our code base and fail on error
  **/
-function lint () {
-  return gulp.src( ['src/*.js'] ).pipe( eslint() ).pipe( eslint.failOnError() );
+function lint() {
+  return gulp.src(['src/*.js']).pipe(eslint()).pipe(eslint.formatEach()).pipe(eslint.failAfterError());
 }
 
-gulp.task( 'build', gulp.series( lint ) );
+gulp.task('lint', gulp.series(lint));

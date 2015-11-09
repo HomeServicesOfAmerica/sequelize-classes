@@ -11,11 +11,7 @@ export class Builder {
   constructor(options = {database: '', username: '', pass: '', config: {}}, models = []) {
     this.sequelize = new Sequelize(options.database, options.username, options.pass, options.config);
     this.models = models.map(Model => new Model());
-    this.registerModels();
-    this.registerRelationships();
-  }
 
-  registerModels() {
     this.models.forEach(model => {
       model.generateOptions();
       const loadedModel = model.registerModel(this.sequelize);
@@ -24,21 +20,49 @@ export class Builder {
         get: () => loadedModel
       });
     });
-  }
 
-  registerRelationships() {
     this.models.forEach(model => {
+      console.log(model._defaultScope, model._scopes);
       this.registerRelationship(model, this.loadedModels[model.constructor.name]);
+      this.registerScopes(model, this.loadedModels[model.constructor.name]);
     });
   }
 
-  registerRelationship(sequelizeSixModel, model) {
-    if (!sequelizeSixModel.constructor._relationships) {
+  registerRelationship(sequelizeClass, model) {
+    if (!sequelizeClass.constructor._relationships) {
       return;
     }
-    sequelizeSixModel.constructor._relationships.forEach(relation => {
+    sequelizeClass.constructor._relationships.forEach(relation => {
       model[relation.type](this.loadedModels[relation.model], relation.options);
     });
+  }
+
+  replaceIncludeModels(scope) {
+    return scope.include.map(include => {
+      if (typeof include.model === 'string') {
+        include.model = this.loadedModels[include.model];
+      }
+      return include;
+    });
+  }
+
+  registerScopes(sequelizeClass, model) {
+    if (sequelizeClass._defaultScope) {
+      if (sequelizeClass._defaultScope.include) {
+        sequelizeClass._defaultScope = this.replaceIncludeModels(sequelizeClass._defaultScope);
+      }
+      model.addScope('defaultScope', sequelizeClass._defaultScope, {override: true});
+    }
+
+    if (sequelizeClass._scopes) {
+      Object.keys(sequelizeClass._scopes).forEach(scopeName => {
+        let scope = sequelizeClass._scopes[scopeName];
+        if (scope.include) {
+          scope = this.replaceIncludeModels(scope);
+        }
+        model.addScope(scopeName, scope);
+      });
+    }
   }
 
   get base() {
