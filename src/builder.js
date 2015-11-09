@@ -22,7 +22,6 @@ export class Builder {
     });
 
     this.models.forEach(model => {
-      console.log(model._defaultScope, model._scopes);
       this.registerRelationship(model, this.loadedModels[model.constructor.name]);
       this.registerScopes(model, this.loadedModels[model.constructor.name]);
     });
@@ -49,7 +48,7 @@ export class Builder {
   registerScopes(sequelizeClass, model) {
     if (sequelizeClass._defaultScope) {
       if (sequelizeClass._defaultScope.include) {
-        sequelizeClass._defaultScope = this.replaceIncludeModels(sequelizeClass._defaultScope);
+        sequelizeClass._defaultScope.include = this.replaceIncludeModels(sequelizeClass._defaultScope);
       }
       model.addScope('defaultScope', sequelizeClass._defaultScope, {override: true});
     }
