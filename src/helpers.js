@@ -119,9 +119,10 @@ function* parseFunction(method, model) {
     if (!isField(method.name, model)) {
       if (method.get) yield ['_getterMethods', method.name, method.get];
       if (method.set) yield ['_setterMethods', method.name, method.set];
+    } else {
+      const field = fieldName(method.name);
+      model._fields[field] = addToDefinition(model._fields[field], method);
     }
-    const field = fieldName(method.name);
-    model._fields[field] = addToDefinition(model._fields[field], method);
   }
   let target = '_instanceMethods';
   if (method.isStatic === true) {
