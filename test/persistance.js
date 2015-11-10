@@ -68,7 +68,7 @@ describe('importing models from external files', () => {
     });
 
     it('should be able to be found', () => {
-      return expect(Test.findOne({where: {name: 'Brad'}})).to.eventually.have.property('name').that.equals('Brad');
+      return expect(Test.findOne({where: {name: 'Brad done'}})).to.eventually.have.property('name').that.equals('Brad done');
     });
 
     it('should not allow a color other then green', () => {

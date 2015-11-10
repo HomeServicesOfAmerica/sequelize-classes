@@ -53,7 +53,6 @@ export class Model {
   // Object Model Options
   @enumerable(false) _options = {};
 
-
   /**
    * @constructor
    * builds the model and calls the cleanConstructor method.
@@ -71,6 +70,11 @@ export class Model {
       this[item] = this.constructor[item] || {};
       delete this.constructor[item];
     });
+    const cleanup = this.constructor._cleanup || [];
+    cleanup.forEach(item => {
+      delete this.constructor[item];
+    });
+    delete this.constructor._cleanup;
     this._indexes = this.constructor._indexes || [];
     delete this.constructor._indexes;
   }

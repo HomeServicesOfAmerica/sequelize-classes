@@ -1,3 +1,4 @@
+import lodash from 'lodash';
 /**
  * Decorator that changes the enumerable property on a property.
  * @param {Boolean} value - what value to set property
@@ -63,9 +64,17 @@ export function scope() {
   };
 }
 
+function addCleanup(target, key) {
+  target._cleanup = target._cleanup || [];
+  target._cleanup.push(key);
+}
+
+
 /**
  * Mark a function as being a hook and add it to the _hooks config object
  * @param {String} action - the action to hook into
+ * @param {Object} options - options object
+ * @param {Boolean} options.delete - should we delete the original function
  * @returns {Function}
  */
 export function hook(action) {
@@ -73,10 +82,11 @@ export function hook(action) {
     if (typeof descriptor.value !== 'function') {
       throw new Error('Attempted to use a function decorator on a non function');
     }
+    const actionKey = `${key}_${action}`;
+    addCleanup(target, key);
     target._hooks = target._hooks || {};
-    target._hooks[key] = {fn: descriptor.value, action};
-    delete target[key];
-    delete descriptor.value;
+    target._hooks[actionKey] = {fn: descriptor.value, action};
+    return descriptor;
   };
 }
 
@@ -271,12 +281,30 @@ export function afterDefine() {
 export function beforeInit() {
   return hook('beforeInit');
 }
+
 /**
  * Shortcut to the Hook decorator that defines a afterInit hook
  * @returns {Function}
  */
 export function afterInit() {
   return hook('afterInit');
+}
+
+export function multipleHooks(actions = []) {
+  let compositeFunction;
+  return (target, key, descriptor) => {
+    actions.forEach(action => {
+      if (!lodash.isString(action)) {
+        throw new Error('All items passed to multipleHooks must be strings representing hook actions');
+      }
+      compositeFunction = hook(action)(target, key, descriptor);
+    });
+    return compositeFunction;
+  };
+}
+
+export function beforePersisted() {
+  return multipleHooks(['beforeUpdate', 'beforeCreate', 'beforeBulkCreate', 'beforeBulkUpdate']);
 }
 
 export function relationship(type, model, options = {}) {
@@ -336,6 +364,21 @@ export function schema(value) {
 
 export function paranoid(value = true) {
   return option('paranoid', value);
+}
+
+export function bulkify() {
+  return (target, key, descriptor) => {
+    const bulkedFunction = descriptor.value;
+    descriptor.value = items => {
+      if (!lodash.isArray(items)) {
+        return bulkedFunction(items);
+      }
+      items.forEach(item => {
+        item = bulkedFunction(item);
+      });
+      return items;
+    };
+  };
 }
 
 /**

@@ -65,8 +65,11 @@ describe('Model instances', () => {
 
   it('should have a _hooks property', () => {
     expect(instance).to.have.property('_hooks').that.is.a('object');
-    expect(instance._hooks).to.have.property('nameToLower').that.is.a('object');
-    expect(instance._hooks.nameToLower).to.have.property('fn').that.is.a('function');
-    expect(instance._hooks.nameToLower).to.have.property('action').that.is.a('string');
+    expect(instance._hooks).to.have.property('nameToLower_beforeCreate').that.is.a('object');
+    expect(instance._hooks).to.have.property('nameToLower_beforeUpdate').that.is.a('object');
+    expect(instance._hooks).to.have.property('typeToUpper_beforeCreate').that.is.a('object');
+    expect(instance._hooks).to.have.property('typeToUpper_beforeUpdate').that.is.a('object');
+    expect(instance._hooks.nameToLower_beforeCreate).to.have.property('fn').that.is.a('function');
+    expect(instance._hooks.nameToLower_beforeCreate).to.have.property('action').that.is.a('string');
   });
 });

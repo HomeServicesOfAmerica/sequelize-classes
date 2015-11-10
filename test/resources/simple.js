@@ -1,4 +1,15 @@
-import { validate, index, beforeCreate, extend, scope } from './../../src/decorators';
+import {
+  validate,
+  index,
+  beforeCreate,
+  beforeUpdate,
+  beforeBulkCreate,
+  beforeBulkUpdate,
+  multipleHooks,
+  extend,
+  bulkify,
+  scope
+} from './../../src/decorators';
 import {Model} from './../../src/builder';
 import SimpleExtension from './simpleExtension';
 
@@ -49,8 +60,17 @@ export default class Simple extends Model {
     }
   }
 
-  @beforeCreate()
+  @multipleHooks(['beforeUpdate', 'beforeCreate'])
   static nameToLower(simple) {
     simple.name = simple.name.toLowerCase();
+  }
+
+  @beforeCreate()
+  @beforeUpdate()
+  @beforeBulkCreate()
+  @beforeBulkUpdate()
+  @bulkify()
+  static typeToUpper(simple) {
+    simple.type = simple.type.toUpperCase();
   }
 }
