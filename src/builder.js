@@ -8,8 +8,8 @@ export class Builder {
   models = [];
   loadedModels = {};
 
-  constructor(options = {database: '', username: '', pass: '', config: {}}, models = []) {
-    this.sequelize = new Sequelize(options.database, options.username, options.pass, options.config);
+  constructor(sequelize, models = []) {
+    this.sequelize = sequelize;
     this.models = models.map(Model => new Model());
 
     this.models.forEach(model => {
