@@ -173,7 +173,7 @@ export class Model {
       getterMethods: this._getterMethods,
       setterMethods: this._setterMethods,
       validate: this._validate,
-      ...this._options
+      ...this.constructor._options
     });
 
     this.declareHooks(model);
