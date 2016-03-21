@@ -3,13 +3,21 @@ import Sequelize from 'sequelize';
 export * from './decorators';
 export * from './model';
 
+const defaultOptions = {database: '', databaseUrl: '', username: '', pass: '', config: {}};
+
 export class Builder {
   sequelize = null;
   models = [];
   loadedModels = {};
 
-  constructor(options = {database: '', username: '', pass: '', config: {}}, models = []) {
-    this.sequelize = new Sequelize(options.database, options.username, options.pass, options.config);
+  constructor(options = defaultOptions, models = []) {
+    let sequelizeArguments = [];
+    if (options.databaseUrl) sequelizeArguments.push(options.databaseUrl);
+    if (!options.databaseUrl && options.database && options.username && options.pass) {
+      sequelizeArguments = [options.database, options.username, options.pass];
+    }
+    sequelizeArguments.push(options.config);
+    this.sequelize = new Sequelize(...sequelizeArguments);
     this.models = models.map(Model => new Model());
 
     this.models.forEach(model => {
