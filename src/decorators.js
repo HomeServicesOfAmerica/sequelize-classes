@@ -369,10 +369,7 @@ export function bulkify() {
       if (!lodash.isArray(items)) {
         return bulkedFunction(items);
       }
-      items.forEach(item => {
-        item = bulkedFunction(item);
-      });
-      return items;
+      return items.map(item => bulkedFunction(item));
     };
   };
 }
