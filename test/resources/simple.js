@@ -73,4 +73,9 @@ export default class Simple extends Model {
   static typeToUpper(simple) {
     simple.type = simple.type.toUpperCase();
   }
+
+  @bulkify()
+  static bulkifiedMethod(item) {
+    return item * 2;
+  }
 }

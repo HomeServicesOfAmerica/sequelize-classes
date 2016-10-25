@@ -72,4 +72,26 @@ describe('Model instances', () => {
     expect(instance._hooks.nameToLower_beforeCreate).to.have.property('fn').that.is.a('function');
     expect(instance._hooks.nameToLower_beforeCreate).to.have.property('action').that.is.a('string');
   });
+
+  describe('@bulkify decorator', () => {
+    it('should call function normally when called with scalar argument', () => {
+      const scalarResult = Simple.bulkifiedMethod(1);
+      expect(scalarResult).to.equal(2);
+    });
+
+    const arrayArgument = [1, 2];
+    let arrayResult;
+
+    it('should return an array when called with array argument', () => {
+      arrayResult = Simple.bulkifiedMethod(arrayArgument);
+      expect(arrayResult).to.be.a('array');
+      expect(arrayResult).to.have.length(arrayArgument.length);
+    });
+
+    it('should apply function to each array item when called with array argument', () => {
+      arrayResult.forEach((item, index) => {
+        expect(item).to.equal(Simple.bulkifiedMethod(arrayArgument[index]));
+      });
+    });
+  });
 });
