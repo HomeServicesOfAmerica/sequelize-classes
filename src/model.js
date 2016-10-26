@@ -92,7 +92,6 @@ export class Model {
 
     Object.keys(this._fields).forEach(key => {
       let definition = this._fields[key];
-      console.log(definition);
       if (typeof definition === 'object') {
         definition.type = dataTypes[definition.type];
       } else {

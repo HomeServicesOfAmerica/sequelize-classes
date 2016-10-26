@@ -8,7 +8,8 @@ addons:
 
 before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
-  - npm install gulpjs/gulp-cli#4.0 -g
+  - psql -c 'create schema test;' -U postgres -d travis_ci_test
+  - npm install gulp-cli -g
   - npm install eslint -g
   - npm install babel -g
   - npm install babel-eslint -g
