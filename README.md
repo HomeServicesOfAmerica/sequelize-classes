@@ -1,5 +1,5 @@
 # Sequelize Six
-![travis-ci](https://travis-ci.org/ConciergeAuctions/sequelize-six.svg?branch=master) [![Stories in Ready](https://badge.waffle.io/ConciergeAuctions/sequelize-six.svg?label=ready&title=Ready)](http://waffle.io/ConciergeAuctions/sequelize-six)
+![travis-ci](https://travis-ci.org/ConciergeAuctions/sequelize-classes.svg?branch=master) [![Stories in Ready](https://badge.waffle.io/ConciergeAuctions/sequelize-classes.svg?label=ready&title=Ready)](http://waffle.io/ConciergeAuctions/sequelize-classes)
 
 ## Overview
 
