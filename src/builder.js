@@ -13,7 +13,7 @@ export class Builder {
   constructor(options = defaultOptions, models = []) {
     let sequelizeArguments = [];
     if (options.databaseUrl) sequelizeArguments.push(options.databaseUrl);
-    if (!options.databaseUrl && options.database && options.username && options.pass) {
+    if (!options.databaseUrl && options.database) {
       sequelizeArguments = [options.database, options.username, options.pass];
     }
     sequelizeArguments.push(options.config);
